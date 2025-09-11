@@ -72,6 +72,15 @@ sudo apt install build-essential libncurses5-dev
 
 ---
 
+## Screenshoots
+
+<img width="979" height="607" alt="Screenshot from 2025-09-11 15-32-17" src="https://github.com/user-attachments/assets/c6808e9e-740f-4daa-ad86-c2f3a9555974" />
+
+<img width="979" height="607" alt="Screenshot from 2025-09-11 15-32-36" src="https://github.com/user-attachments/assets/52fb9701-8f7f-4a19-98ea-8ba94ba30db8" />
+
+
+---
+
 ## 👨‍💻 Author
 
 Developed by Shady Mansour
