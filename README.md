@@ -27,7 +27,27 @@ It brings the addictive slide-and-merge gameplay into a distraction-free colorfu
 
 ## 📦 Installation
 
-### From source
+### From Debian Package
+Download the .deb package provided in the [release page](https://github.com/Shadymansour19/2048-terminal/releases/).
+
+```bash
+sudo apt install wget
+wget https://github.com/Shadymansour19/2048-terminal/releases/download/v1.0/2048-terminal_1.0-1_amd64.deb
+```
+
+Install the package.
+```bash
+sudo apt install ./2048-terminal_1.0-1_amd64.deb
+```
+
+By default, the binary installs into /usr/games/2048-terminal. You can check it by:
+```bash
+which 2048-terminal
+```
+
+---
+
+### From source code
 Clone the repository and build:
 
 ```bash
@@ -36,25 +56,28 @@ cd 2048-terminal
 sudo make install
 ```
 
-By default, the binary installs into /usr/games/2048-terminal.
-
-Run it with:
-
-```
-2048-terminal
-```
-
 ---
 
-### 📦 Debian/Ubuntu package
+### Build Debian/Ubuntu package locally?
 
-You can also build a .deb package (for easy installation):
+You can also build a .deb package similar to the one provided in the [release page](https://github.com/Shadymansour19/2048-terminal/releases/) from the source code as follows:
 
 
 ```
 sudo apt install checkinstall
 sudo checkinstall
 ```
+
+---
+
+## 🎮 Running the game
+
+Run the game with:
+
+```
+2048-terminal
+```
+
 
 ---
 
@@ -72,7 +95,7 @@ sudo apt install build-essential libncurses5-dev
 
 ---
 
-## Screenshoots
+## 📸 Screenshoots
 
 <img width="979" height="607" alt="Screenshot from 2025-09-11 15-32-17" src="https://github.com/user-attachments/assets/c6808e9e-740f-4daa-ad86-c2f3a9555974" />
 
@@ -81,7 +104,7 @@ sudo apt install build-essential libncurses5-dev
 
 ---
 
-## 👨‍💻 Author
+## 👩‍💻 Author
 
 Developed by Shady Mansour
 
