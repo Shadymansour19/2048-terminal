@@ -27,7 +27,26 @@ It brings the addictive slide-and-merge gameplay into a distraction-free colorfu
 
 ## 📦 Installation
 
-### From Debian Package
+### 1. From official PPA (Recommended 🚀)
+The easiest way to install 2048-terminal on Ubuntu/Debian-based distros is via the official PPA on Launchpad:
+
+```bash
+sudo add-apt-repository ppa:shadymansour19/2048-terminal
+sudo apt update
+sudo apt install 2048-terminal
+```
+
+This way, you guarantee to get the latest updates automatically.
+
+
+By default, the binary installs into /usr/games/2048-terminal.
+Check with:
+
+```bash
+which 2048-terminal
+```
+
+### 2. From Debian Package
 Download the .deb package provided in the [release page](https://github.com/Shadymansour19/2048-terminal/releases/).
 
 ```bash
@@ -40,14 +59,9 @@ Install the package.
 sudo apt install ./2048-terminal_1.0-1_amd64.deb
 ```
 
-By default, the binary installs into /usr/games/2048-terminal. You can check it by:
-```bash
-which 2048-terminal
-```
-
 ---
 
-### From source code
+### 3. From source code
 Clone the repository and build:
 
 ```bash
@@ -74,7 +88,7 @@ sudo checkinstall
 
 Run the game with:
 
-```
+```bash
 2048-terminal
 ```
 
@@ -83,7 +97,7 @@ Run the game with:
 
 ## 🛠 Dependencies
 
-- gcc (for building)
+- gcc (required for building only in case of installation from source code)
 - libncurses5-dev (or libncursesw5-dev)
 
 
