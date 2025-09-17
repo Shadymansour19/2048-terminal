@@ -6,7 +6,13 @@
 #include "colors.h"
 #include <string.h>
 
-void displayInit(int boardSize);
+
+#define     displayMessage                printw
+#define     displayGetPressedKey          getch
+#define     displayMoveCursor             move
+
+void displayInit();
+void displayBoardInit(int boardSize);
 void displayScore(int score);
 void displayCell(int row, int col, int cellVal);
 void clearCell(int row, int col);

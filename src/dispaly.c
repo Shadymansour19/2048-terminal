@@ -3,7 +3,7 @@
 
 #define   ROWS_OFFSET       (3) 
 #define   CELL_NUM_ROWS     (4)
-#define   CELL_NUM_COLS     (15)
+#define   CELL_NUM_COLS     (10)
 
 
 static void msbToStr(char msb, char* str);
@@ -28,7 +28,7 @@ static void msbToStr(char msb, char* str) {
 }
 
 
-void displayInit(int boardSize) {
+void displayInit() {
     initscr();
     clear();
     keypad(stdscr, TRUE);
@@ -43,6 +43,12 @@ void displayInit(int boardSize) {
     for (int msb = 1; msb < 32; msb++) {
         init_pair(msb, COLOR_WHITE, BACKGROUND_COLOR[msb]);
     }
+}
+
+
+
+void displayBoardInit(int boardSize) {
+    displayInit();
 
     // Draw vertical borders
     for (int col = 0; col <= boardSize; col++) {
@@ -80,7 +86,7 @@ void displayCell(int row, int col, int cellValMsb) {
     char valToDisplay[10] = {};
     msbToStr(cellValMsb, valToDisplay);
     row = (stRow + edRow) / 2;
-    col = (stCol + edCol - strlen(valToDisplay)) / 2;
+    col = (stCol + edCol - strlen(valToDisplay) + 1) / 2;
     mvprintw(row, col, "%s", valToDisplay);
     
     attroff(COLOR_PAIR(cellValMsb));
