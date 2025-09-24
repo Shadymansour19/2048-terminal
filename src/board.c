@@ -3,6 +3,43 @@
 
 
 static void fillOneCell(Board_t* board);
+static bool slideBoardUp(Board_t* board);
+static bool slideBoardDown(Board_t* board);
+static bool slideBoardLeft(Board_t* board);
+static bool slideBoardRight(Board_t* board);
+
+
+
+bool initBoard(int size, Board_t* board) {
+    srand(time(NULL));
+    if (board == NULL) {
+        return false;
+    }
+
+    board->size = size;
+    board->score = 0;
+    board->maxCell = EMPTY_CELL;
+    board->cells = calloc(sizeof(char*), size);
+    if (board->cells == NULL) {
+        return false;
+    }
+
+    for (int i = 0; i < size; i++) {
+        board->cells[i] = calloc(sizeof(char), size);
+        if (board->cells[i] == NULL) {
+            return false;
+        }
+        for (int j = 0; j < size; j++) {
+            board->cells[i][j] = EMPTY_CELL;
+        }
+    }
+
+    fillOneCell(board);
+    fillOneCell(board);
+    
+    return true;
+}
+
 
 
 static void fillOneCell(Board_t* board) {
@@ -10,51 +47,23 @@ static void fillOneCell(Board_t* board) {
     do {
         r = rand() % board->size;
         c = rand() % board->size;
-    } while (board->cellsMsb[r][c]);
+    } while (board->cells[r][c]);
     
-    board->cellsMsb[r][c] = LOWEST_MSB(board->maxMsb, board->size);
-    board->cellsMsb[r][c] += ((rand() / (double) RAND_MAX) > PROBABILITY_LOW);
-    board->maxMsb = MAX(board->maxMsb, board->cellsMsb[r][c]);
+    board->cells[r][c] = newCell(board->size, board->maxCell);
+    board->maxCell = MAX(board->maxCell, board->cells[r][c]);
 }
 
 
-Board_t* newBoard(int size) {
-    srand(time(NULL));
-    Board_t* board = malloc(sizeof(Board_t));
-    if (board == NULL) {
-        return NULL;
-    }
-
-    board->size = size;
-    board->score = 0;
-    board->maxMsb = 0;
-    board->cellsMsb = calloc(sizeof(int*), size);
-    if (board->cellsMsb == NULL) {
-        return NULL;
-    }
-
-    for (int i = 0; i < size; i++) {
-        board->cellsMsb[i] = calloc(sizeof(int), size);
-        if (board->cellsMsb[i] == NULL) {
-            return NULL;
-        }
-    }
-
-    fillOneCell(board);
-    fillOneCell(board);
-    
-    return board;
-}
 
 
 void printBoard(Board_t* board) {
     displayScore(board->score);
     for (int i = 0; i < board->size; i++) {
         for (int j = 0; j < board->size; j++) {
-            if (board->cellsMsb[i][j]) {
-                displayCell(i, j, board->cellsMsb[i][j]);
-            } else {
+            if (board->cells[i][j] == EMPTY_CELL) {
                 clearCell(i, j);
+            } else {
+                displayCell(i, j, board->cells[i][j]);
             }
         }
     }
@@ -64,7 +73,7 @@ void printBoard(Board_t* board) {
 bool canBoardMove(Board_t* board) {
     for (int i = 0; i < board->size; i++) {
         for (int j = 0; j < board->size; j++) {
-            if (board->cellsMsb[i][j] == 0 || (i > 0 && board->cellsMsb[i][j] == board->cellsMsb[i-1][j]) || (j > 0 && board->cellsMsb[i][j] == board->cellsMsb[i][j-1])) {
+            if (board->cells[i][j] == EMPTY_CELL || (i > 0 && board->cells[i][j] == board->cells[i-1][j]) || (j > 0 && board->cells[i][j] == board->cells[i][j-1])) {
                 return true;
             } 
         }
@@ -73,50 +82,62 @@ bool canBoardMove(Board_t* board) {
 }
 
 
-bool moveBoard(Board_t* board, Direction_t dir) {
-    bool ret = false;
-    if (dir == UP) {
-        ret = moveBoardUp(board);
-    } else if (dir == DOWN) {
-        ret = moveBoardDown(board);
-    } else if (dir == LEFT) {
-        ret = moveBoardLeft(board);
-    } else if (dir == RIGHT) {
-        ret = moveBoardRight(board);
-    } 
+void copyBoard(Board_t* src, Board_t* dst) {
+    for (int i = 0; i < src->size; i++) {
+        for (int j = 0; j < src->size; j++) {
+            dst->cells[i][j] = src->cells[i][j];
+        }
+    }
+    dst->maxCell = src->maxCell;
+    dst->score = src->score;
+}
 
+
+bool slideBoard(Board_t* oldBoard, Board_t* newBoard, Direction_t dir) {
+    bool ret = false;
+    copyBoard(oldBoard, newBoard);
+    if (dir == UP) {
+        ret = slideBoardUp(newBoard);
+    } else if (dir == DOWN) {
+        ret = slideBoardDown(newBoard);
+    } else if (dir == LEFT) {
+        ret = slideBoardLeft(newBoard);
+    } else if (dir == RIGHT) {
+        ret = slideBoardRight(newBoard);
+    } 
+    
     if (ret) {
-        fillOneCell(board);
+        fillOneCell(newBoard);
     }
     return ret;
 }
 
 
 
-bool moveBoardUp(Board_t* board) {
+static bool slideBoardUp(Board_t* board) {
     bool isAnyMoved = false;
     for (int i = 1; i < board->size; i++) {
         for (int j = 0; j < board->size; j++) {
-            if (board->cellsMsb[i][j] == 0) {
+            if (board->cells[i][j] == EMPTY_CELL) {
                 continue;
             } 
             
             int r = i;
-            if (board->cellsMsb[i-1][j] == 0) {
+            if (board->cells[i-1][j] == EMPTY_CELL) {
                 r = i-1;
-                while (r > 0 && board->cellsMsb[r-1][j] == 0) {
+                while (r > 0 && board->cells[r-1][j] == EMPTY_CELL) {
                     r--;
                 }
-                board->cellsMsb[r][j] = board->cellsMsb[i][j];
-                board->cellsMsb[i][j] = 0;
+                board->cells[r][j] = board->cells[i][j];
+                board->cells[i][j] = EMPTY_CELL;
                 isAnyMoved = true;
             }
             
-            if (r > 0 && board->cellsMsb[r-1][j] == board->cellsMsb[r][j]) {
-                board->cellsMsb[r-1][j]++;
-                board->cellsMsb[r][j] = 0;
-                board->score += 1 << board->cellsMsb[r-1][j];
-                board->maxMsb = MAX(board->maxMsb, board->cellsMsb[r-1][j]);
+            if (r > 0 && board->cells[r-1][j] == board->cells[r][j]) {
+                board->cells[r-1][j]++;
+                board->cells[r][j] = EMPTY_CELL;
+                board->score += 1 << board->cells[r-1][j];
+                board->maxCell = MAX(board->maxCell, board->cells[r-1][j]);
                 isAnyMoved = true;
             }
         }
@@ -125,30 +146,30 @@ bool moveBoardUp(Board_t* board) {
 }
 
 
-bool moveBoardDown(Board_t* board) {
+static bool slideBoardDown(Board_t* board) {
     bool isAnyMoved = false;
     for (int i = board->size - 2; i >= 0; i--) {
         for (int j = 0; j < board->size; j++) {
-            if (board->cellsMsb[i][j] == 0) {
+            if (board->cells[i][j] == EMPTY_CELL) {
                 continue;
             } 
             
             int r = i;
-            if (board->cellsMsb[i+1][j] == 0) {
+            if (board->cells[i+1][j] == EMPTY_CELL) {
                 r = i+1;
-                while (r+1 < board->size && board->cellsMsb[r+1][j] == 0) {
+                while (r+1 < board->size && board->cells[r+1][j] == EMPTY_CELL) {
                     r++;
                 }
-                board->cellsMsb[r][j] = board->cellsMsb[i][j];
-                board->cellsMsb[i][j] = 0;
+                board->cells[r][j] = board->cells[i][j];
+                board->cells[i][j] = EMPTY_CELL;
                 isAnyMoved = true;
             }
             
-            if (r+1 < board->size && board->cellsMsb[r+1][j] == board->cellsMsb[r][j]) {
-                board->cellsMsb[r+1][j]++;
-                board->cellsMsb[r][j] = 0;
-                board->score += 1 << board->cellsMsb[r+1][j];
-                board->maxMsb = MAX(board->maxMsb, board->cellsMsb[r+1][j]);
+            if (r+1 < board->size && board->cells[r+1][j] == board->cells[r][j]) {
+                board->cells[r+1][j]++;
+                board->cells[r][j] = EMPTY_CELL;
+                board->score += 1 << board->cells[r+1][j];
+                board->maxCell = MAX(board->maxCell, board->cells[r+1][j]);
                 isAnyMoved = true;
             }
         }
@@ -157,31 +178,31 @@ bool moveBoardDown(Board_t* board) {
 }
 
 
-bool moveBoardLeft(Board_t* board) {
+static bool slideBoardLeft(Board_t* board) {
     bool isAnyMoved = false;
     for (int i = 0; i < board->size; i++) {
         for (int j = 1; j < board->size; j++) {
-            if (board->cellsMsb[i][j] == 0) {
+            if (board->cells[i][j] == EMPTY_CELL) {
                 continue;
             } 
             
             int c = j;
-            if (board->cellsMsb[i][j-1] == 0) {
+            if (board->cells[i][j-1] == EMPTY_CELL) {
                 c = j-1;
-                while (c > 0 && board->cellsMsb[i][c-1] == 0) {
+                while (c > 0 && board->cells[i][c-1] == EMPTY_CELL) {
                     c--;
                 }
-                board->cellsMsb[i][c] = board->cellsMsb[i][j];
-                board->cellsMsb[i][j] = 0;
+                board->cells[i][c] = board->cells[i][j];
+                board->cells[i][j] = EMPTY_CELL;
                 isAnyMoved = true;
             }
             
             
-            if (c > 0 && board->cellsMsb[i][c-1] == board->cellsMsb[i][c]) {
-                board->cellsMsb[i][c-1]++;
-                board->cellsMsb[i][c] = 0;
-                board->score += 1 << board->cellsMsb[i][c-1];
-                board->maxMsb = MAX(board->maxMsb, board->cellsMsb[i][c-1]);
+            if (c > 0 && board->cells[i][c-1] == board->cells[i][c]) {
+                board->cells[i][c-1]++;
+                board->cells[i][c] = EMPTY_CELL;
+                board->score += 1 << board->cells[i][c-1];
+                board->maxCell = MAX(board->maxCell, board->cells[i][c-1]);
                 isAnyMoved = true;
             }
         }
@@ -190,31 +211,31 @@ bool moveBoardLeft(Board_t* board) {
 }
 
 
-bool moveBoardRight(Board_t* board) {
+static bool slideBoardRight(Board_t* board) {
     bool isAnyMoved = false;
     for (int i = 0; i < board->size; i++) {
         for (int j = board->size - 2; j >= 0; j--) {
-            if (board->cellsMsb[i][j] == 0) {
+            if (board->cells[i][j] == EMPTY_CELL) {
                 continue;
             } 
             
             int c = j;
-            if (board->cellsMsb[i][j+1] == 0) {
+            if (board->cells[i][j+1] == EMPTY_CELL) {
                 c = j+1;
-                while (c+1 < board->size && board->cellsMsb[i][c+1] == 0) {
+                while (c+1 < board->size && board->cells[i][c+1] == EMPTY_CELL) {
                     c++;
                 }
-                board->cellsMsb[i][c] = board->cellsMsb[i][j];
-                board->cellsMsb[i][j] = 0;
+                board->cells[i][c] = board->cells[i][j];
+                board->cells[i][j] = EMPTY_CELL;
                 isAnyMoved = true;
             }
             
             
-            if (board->cellsMsb[i][c+1] == board->cellsMsb[i][c]) {
-                board->cellsMsb[i][c+1]++;
-                board->cellsMsb[i][c] = 0;
-                board->score += 1 << board->cellsMsb[i][c+1];
-                board->maxMsb = MAX(board->maxMsb, board->cellsMsb[i][c+1]);
+            if (board->cells[i][c+1] == board->cells[i][c]) {
+                board->cells[i][c+1]++;
+                board->cells[i][c] = EMPTY_CELL;
+                board->score += 1 << board->cells[i][c+1];
+                board->maxCell = MAX(board->maxCell, board->cells[i][c+1]);
                 isAnyMoved = true;
             }
         }
@@ -225,18 +246,13 @@ bool moveBoardRight(Board_t* board) {
 
 
 void freeBoard(Board_t* board) {
-    if (board == NULL) {
-        return;
-    }
-
-    if (board->cellsMsb == NULL) {
-        free(board);
+    if (board == NULL || board->cells == NULL) {
         return;
     }
 
     for (int i = 0; i < board->size; i++) {
-        free(board->cellsMsb[i]);
+        free(board->cells[i]);
     }
-    free(board->cellsMsb);
-    free(board);
+    free(board->cells);
+    board->cells = NULL;
 }

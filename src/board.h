@@ -7,27 +7,25 @@
 #include <time.h>
 #include "directions.h"
 #include <stdbool.h>
-#include "dispaly.h"
-#include "gameLogic.h"
+#include "display.h"
+#include "cell.h"
+#include "gameSettings.h"
 #include "miniMax.h"
 
 
 typedef struct Board_t {
-    int    size;
-    int    score;
-    char** cellsMsb;
-    char   maxMsb;
+    int      size;
+    int      score;
+    Cell_t** cells;
+    Cell_t   maxCell;
 } Board_t;
 
 
-Board_t* newBoard(int size);
+bool initBoard(int size, Board_t* board);
 void printBoard(Board_t* board);
 bool canBoardMove(Board_t* board);
-bool moveBoard(Board_t* board, Direction_t dir);
-bool moveBoardUp(Board_t* board);
-bool moveBoardDown(Board_t* board);
-bool moveBoardLeft(Board_t* board);
-bool moveBoardRight(Board_t* board);
+void copyBoard(Board_t* src, Board_t* dst);
+bool slideBoard(Board_t* oldBoard, Board_t* newBoard, Direction_t dir);
 void freeBoard(Board_t* board);
 
 

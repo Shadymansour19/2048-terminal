@@ -7,11 +7,17 @@ It brings the addictive slide-and-merge gameplay into a distraction-free colorfu
 
 ## 🎮 Gameplay
 
-- Use **arrow keys** to slide the tiles.  
-- When two tiles with the same number collide, they merge into one.  
-- New tiles appear after every move.  
-- Score: combining two tiles increases score with the tiles sum.   
-- If the board fills up with no possible moves, game is over.
+- Usage:
+    - **arrow keys** to slide the tiles. 
+    - **q** to quit the game. 
+    - **u** to undo last move. 
+    - **r** to redo last move. 
+    - **?** to get a hint. 
+    - **h** to display the help message. 
+- When two tiles with the same number collide, they merge into one. 
+- New tiles appear after every move. 
+- Score: combining two tiles increases score with the tiles sum. 
+- If the board fills up with no possible moves, game is over. 
 
 ---
 
