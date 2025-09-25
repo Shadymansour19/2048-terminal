@@ -57,12 +57,14 @@ Download the .deb package provided in the [release page](https://github.com/Shad
 
 ```bash
 sudo apt install wget
-wget https://github.com/Shadymansour19/2048-terminal/releases/download/v1.0/2048-terminal_1.0-1_amd64.deb
+wget https://github.com/shadymansour19/2048-terminal/releases/latest/download/2048-terminal_<VERSION>_amd64.deb
 ```
+Replace ```<VERSION>``` with the desired version.
 
-Install the package.
+
+Then install the package.
 ```bash
-sudo apt install ./2048-terminal_1.0-1_amd64.deb
+sudo apt install ./2048-terminal_<VERSION>_amd64.deb
 ```
 
 ---
@@ -131,4 +133,3 @@ Developed by Shady Mansour
 📧 shadymansour19@gmail.com
 
 🌍 [LinkedIn](https://linkedin.com/in/shadymansour19) • [GitHub](https://github.com/shadymansour19)
-
