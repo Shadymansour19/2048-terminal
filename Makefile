@@ -1,10 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall 
 LIBS = -lncurses
 
 
 2048-terminal: src/* 
-	$(CC) $(CFLAGS) src/* $(LIBS) -o 2048-terminal
+	$(CC) $(CFLAGS) src/*.c $(LIBS) -o 2048-terminal
 
 clean:
 	rm -f 2048-terminal
