@@ -17,6 +17,7 @@
 
 
 void displayInit(void);
+void displayHelpScreen(void);
 void displaySplashScreen(void);
 void ensureBoardFit(const int bs);                  // bs = board size
 void displayReinit(void);

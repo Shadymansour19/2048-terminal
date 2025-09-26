@@ -4,8 +4,7 @@
 void newGame(void) {
     int pressedKey;
     static const char* (gameOverTrailer[]) = {
-        " Game Over ", 
-        "Undo? <y,n>", 
+        "Game Over! Undo? <y,n>", 
         NULL
     };
 
@@ -36,6 +35,9 @@ void newGame(void) {
             break;
         } else if (pressedKey == KEY_RESIZE) {
             ensureBoardFit(boardSize);
+            gamePrintBoard(&game);
+        } else if (pressedKey == HELP_KEY) {
+            displayHelpScreen();
             gamePrintBoard(&game);
         } else if (pressedKey == UNDO_KEY) {
             gameUndo(&game);

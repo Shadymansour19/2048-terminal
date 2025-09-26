@@ -12,6 +12,7 @@
 
 static int boardSize;
 static void displayBoarders(void);
+static void hlp(void);                      // prints help messages (usage)
 
 
 void displayInit(void) {
@@ -32,23 +33,38 @@ void displayInit(void) {
 }
 
 
+static void hlp(void) {
+    move(1, 0);
+    mvprintw(getcury(stdscr) + 1, 2, "Developed by: Shady Mansour <shadymansour19@gmail.com>");
+    mvprintw(getcury(stdscr) + 1, 2, "Source code: https://github.com/shadymansour19/2048-terminal");
+    mvprintw(getcury(stdscr) + 2, 2, "Usage: ");
+    mvprintw(getcury(stdscr) + 1, 4, "- Arrow keys to slide the tiles");
+    mvprintw(getcury(stdscr) + 1, 4, "- %c to quit the game", QUIT_KEY);
+    mvprintw(getcury(stdscr) + 1, 4, "- %c to undo last move", UNDO_KEY);
+    mvprintw(getcury(stdscr) + 1, 4, "- %c to redo last move", REDO_KEY);
+    mvprintw(getcury(stdscr) + 1, 4, "- %c to git a hint", HINT_KEY);
+    mvprintw(getcury(stdscr) + 1, 4, "- %c to display this help message", HELP_KEY);
+}
+
+
+void displayHelpScreen(void) {
+    displayClearAll();
+    hlp();
+    mvprintw(getcury(stdscr) + 2, 14, "Press any key to continue");
+    displayGetPressedKey();
+    displayReinit();
+}
+
+
 void displaySplashScreen(void) {
-    mvprintw(2 , 2, "Developed by: Shady Mansour <shadymansour19@gmail.com>");
-    mvprintw(3 , 2, "Source code: https://github.com/shadymansour19/2048-terminal");
-    mvprintw(5 , 2, "Usage: ");
-    mvprintw(6 , 4, "- Arrow keys to slide the tiles");
-    mvprintw(7 , 4, "- %c to quit the game", QUIT_KEY);
-    mvprintw(8 , 4, "- %c to undo last move", UNDO_KEY);
-    mvprintw(9 , 4, "- %c to redo last move", REDO_KEY);
-    mvprintw(10, 4, "- %c to git a hint", HINT_KEY);
-    mvprintw(11, 4, "- %c to display this help message", HELP_KEY);
-    mvprintw(13, 14, "Board Size? <%d..%d> ", MIN_BOARD_SIZE, MAX_BOARD_SIZE);
+    hlp();
+    mvprintw(getcury(stdscr) + 2, 14, "Board Size? <%d..%d> ", MIN_BOARD_SIZE, MAX_BOARD_SIZE);
 }
 
 
 void ensureBoardFit(const int bs) {
     boardSize = bs;
-    int minLines = ROWS_OFFSET + boardSize * CELL_NUM_ROWS + TRAILER_MARGIN + 1;
+    int minLines = ROWS_OFFSET + boardSize * CELL_NUM_ROWS + 2 * TRAILER_MARGIN;
     int minCols  = MAX(50, boardSize * CELL_NUM_COLS) + 1;
     char msg[80];
     sprintf(msg, "Please resize window to be at least %d x %d", minCols, minLines);
@@ -61,7 +77,7 @@ void ensureBoardFit(const int bs) {
         printw("%s", msg);
         displayGetPressedKey();
     }
-    displayClearAll();
+
     displayReinit();
 }
 
@@ -141,7 +157,7 @@ void clearCell(const int row, const int col) {
 void displayTrailer(const char** msgs) {
     int cellStRow = ROWS_OFFSET + boardSize * CELL_NUM_ROWS + TRAILER_MARGIN;
     for (int i = 0; msgs[i]; i++) {
-        mvprintw(cellStRow + i, TRAILER_MARGIN, "%s", msgs[i]);
+        mvprintw(cellStRow + i, (COLS - strlen(msgs[i])) / 2, "%s", msgs[i]);
     }
 }
 
@@ -157,13 +173,19 @@ void clearTrailer(void) {
 
 
 
-
 bool displayEndGame(const int finalScore) {
-    clear();
-    move(5, 0);
-    printw("                  Game Over!                   \n\r");
-    printw("              Final Score: %d!                 \n\r", finalScore);
-    printw("                New Game? <y/n>                \n\r");
+    displayClearAll();
+    
+    char msg1[] = "Game Over!";
+    char msg3[] = "New Game? <y/n>";
+    char msg2[32];
+    sprintf(msg2, "Final Score: %d!", finalScore);
+    
+    int row = LINES / 2 - 1;
+    move(row - 1, 0);
+    mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg1)) / 2, "%s", msg1);
+    mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg2)) / 2, "%s", msg2);
+    mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg3)) / 2, "%s", msg3);
     refresh();
     
     int choice;
