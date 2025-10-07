@@ -29,7 +29,7 @@ void newGame(void) {
     }
 
     while (true) {
-        // clearTrailer();
+        clearTrailer();
         pressedKey = displayGetPressedKey();
         if (pressedKey == QUIT_KEY) {
             break;
