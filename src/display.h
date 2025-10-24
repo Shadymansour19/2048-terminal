@@ -3,6 +3,7 @@
 
 
 #include <ncurses.h>
+#include <unistd.h>
 #include "colors.h"
 #include "gameSettings.h"
 #include <string.h>
