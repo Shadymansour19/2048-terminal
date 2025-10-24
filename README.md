@@ -1,7 +1,7 @@
 # 2048-terminal
 
 **2048-terminal** is a lightweight, ncurses-based clone of the popular 2048 puzzle game, designed to run natively inside your Linux terminal.  
-It brings the addictive slide-and-merge gameplay into a distraction-free colorful text-based environment — perfect for quick breaks.
+It brings the addictive slide-and-merge gameplay into a distraction-free, colorful, text-based environment — perfect for quick breaks.
 
 ---
 
@@ -10,14 +10,14 @@ It brings the addictive slide-and-merge gameplay into a distraction-free colorfu
 - Usage:
     - **arrow keys** to slide the tiles. 
     - **q** to quit the game. 
-    - **u** to undo last move. 
-    - **r** to redo last move. 
-    - **?** to get a hint. 
-    - **h** to display the help message. 
+    - **u** to undo the last move. 
+    - **r** to redo the last move. 
+    - **h** to get a hint. 
+    - **?** to display the help message. 
 - When two tiles with the same number collide, they merge into one. 
 - New tiles appear after every move. 
-- Score: combining two tiles increases score with the tiles sum. 
-- If the board fills up with no possible moves, game is over. 
+- Score: combining two tiles increases the score by their sum. 
+- If the board fills up with no possible moves, the game is over. 
 
 ---
 
@@ -119,9 +119,15 @@ sudo apt install build-essential libncurses5-dev
 
 ## 📸 Screenshoots
 
-<img width="979" height="607" alt="Screenshot from 2025-09-11 15-32-17" src="https://github.com/user-attachments/assets/c6808e9e-740f-4daa-ad86-c2f3a9555974" />
+<img width="1054" height="543" alt="image" src="https://github.com/user-attachments/assets/403f7e81-5958-4de7-a14e-86e2fc6ae8f1" />
 
-<img width="979" height="607" alt="Screenshot from 2025-09-11 15-32-36" src="https://github.com/user-attachments/assets/52fb9701-8f7f-4a19-98ea-8ba94ba30db8" />
+<img width="1054" height="543" alt="image" src="https://github.com/user-attachments/assets/758d1bb7-64dc-49b8-ad41-d9c2dc9c5603" />
+
+<img width="1054" height="699" alt="image" src="https://github.com/user-attachments/assets/0615cee8-9093-4745-bfe8-d644e2924727" />
+
+<img width="1054" height="699" alt="image" src="https://github.com/user-attachments/assets/e8dc67f2-fa0d-47c0-9c46-ca6219718caf" />
+
+<img width="1054" height="699" alt="image" src="https://github.com/user-attachments/assets/5e15eb52-c70e-47c2-abd7-9e867b538e1d" />
 
 
 ---
