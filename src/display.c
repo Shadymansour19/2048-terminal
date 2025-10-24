@@ -154,11 +154,9 @@ void clearCell(const int row, const int col) {
 
 
 
-void displayTrailer(const char** msgs) {
+void displayTrailer(const char* msg) {
     int cellStRow = ROWS_OFFSET + boardSize * CELL_NUM_ROWS + TRAILER_MARGIN;
-    for (int i = 0; msgs[i]; i++) {
-        mvprintw(cellStRow + i, (COLS - strlen(msgs[i])) / 2, "%s", msgs[i]);
-    }
+    mvprintw(cellStRow, (COLS - strlen(msg)) / 2, "%s", msg);
 }
 
 
@@ -173,11 +171,10 @@ void clearTrailer(void) {
 
 
 
-bool displayEndGame(const int finalScore) {
+void displayEndGame(const int finalScore) {
     displayClearAll();
     
     char msg1[] = "Game Over!";
-    char msg3[] = "New Game? <y/n>";
     char msg2[32];
     sprintf(msg2, "Final Score: %d!", finalScore);
     
@@ -185,18 +182,10 @@ bool displayEndGame(const int finalScore) {
     move(row - 1, 0);
     mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg1)) / 2, "%s", msg1);
     mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg2)) / 2, "%s", msg2);
-    mvprintw(getcury(stdscr) + 1, (COLS - strlen(msg3)) / 2, "%s", msg3);
     refresh();
     
-    int choice;
-    do {
-        choice = displayGetPressedKey();
-    } while (choice != 'y' && choice != 'n');
-
-    if (choice == 'y') {
-        return true;
-    }
+    sleep(END_GAME_MSG_TIME);
     
     displayQuit();
-    return false;
+    printf("\n%s\n\n", msg2);
 }

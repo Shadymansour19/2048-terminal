@@ -24,9 +24,9 @@ void displayReinit(void);
 void displayScore(const int score);
 void displayCell(const int row, const int col, const Cell_t cellVal);
 void clearCell(const int row, const int col);
-void displayTrailer(const char** msgs);
+void displayTrailer(const char* msg);
 void clearTrailer(void);
-bool displayEndGame(const int finalScore);
+void displayEndGame(const int finalScore);
 
 
 #endif   // DISPLAY_H_

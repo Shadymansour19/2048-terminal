@@ -20,10 +20,12 @@ typedef struct Game_t {
 
 
 bool initGame(int boardSize, Game_t* game);
+void cloneGame(Game_t* src, Game_t* dst);
 bool gameSlide(Game_t* game, Direction_t dir);
 void gamePrintBoard(Game_t* game);
 void gameUndo(Game_t* game);
 void gameRedo(Game_t* game);
+Direction_t gameHint(Game_t* game);
 bool isGameOver(Game_t* game);
 int  getGameScore(Game_t* game);
 void freeGame(Game_t* game);

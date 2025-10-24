@@ -19,6 +19,30 @@ static void dbg(Game_t* game) {
 }
 
 
+static int maxScore(Game_t* game, Direction_t dir, int depth) {
+    if (depth == 0) {
+        return getGameScore(game);
+    }
+
+    if (gameSlide(game, dir) == false) {
+        return getGameScore(game);
+    }
+    
+    int score = MAX(
+        MAX(
+            maxScore(game, UP, depth - 1), 
+            maxScore(game, DOWN, depth - 1)
+        ),
+        MAX(
+            maxScore(game, LEFT, depth - 1), 
+            maxScore(game, RIGHT, depth - 1)
+        )
+    );
+    gameUndo(game);
+    return score;
+}
+
+
 
 bool initGame(int boardSize, Game_t* game) {
     if (game == NULL) {
@@ -40,6 +64,19 @@ bool initGame(int boardSize, Game_t* game) {
 }
 
 
+void cloneGame(Game_t* src, Game_t* dst) {
+    dst->boardSize = src->boardSize;
+    dst->boardsStackSize = src->boardsStackSize;
+    dst->currentBoardIdx = src->currentBoardIdx;
+    dst->lastBoardIdx = src->lastBoardIdx;
+
+    for (int i = 0; i < STACK_CAPACITY; i++) {
+        initBoard(dst->boardSize, &dst->boardsStack[i]);
+        copyBoard(&src->boardsStack[i], &dst->boardsStack[i]);
+    }
+}
+
+
 void gameUndo(Game_t* game) {
     int prevIdx = (game->currentBoardIdx + game->boardsStackSize - 1) % game->boardsStackSize;
     if (prevIdx == game->lastBoardIdx) {
@@ -47,7 +84,6 @@ void gameUndo(Game_t* game) {
         fflush(stdout);     // Ensure the sound is played immediately
     } else {
         game->currentBoardIdx = prevIdx;
-        printBoard(&game->boardsStack[game->currentBoardIdx]);
     }
 }
 
@@ -64,6 +100,34 @@ void gameRedo(Game_t* game) {
 }
 
 
+Direction_t gameHint(Game_t* game) {
+    Game_t gameClone;
+    cloneGame(game, &gameClone);
+
+    int upScore = maxScore(&gameClone, UP, MAX_HINT_DEPTH);
+    int downScore = maxScore(&gameClone, DOWN, MAX_HINT_DEPTH);
+    int leftScore = maxScore(&gameClone, LEFT, MAX_HINT_DEPTH);
+    int rightScore = maxScore(&gameClone, RIGHT, MAX_HINT_DEPTH);
+
+    freeGame(&gameClone);
+
+    int maxScore = MAX(
+        MAX(upScore, downScore),
+        MAX(leftScore, rightScore)
+    );
+
+    if (maxScore == upScore) {
+        return UP;
+    } else if (maxScore == downScore) {
+        return DOWN;
+    } else if (maxScore == leftScore) {
+        return LEFT;
+    } else {
+        return RIGHT;
+    }
+}
+
+
 bool gameSlide(Game_t* game, Direction_t dir) {
     int  nextIdx = (game->currentBoardIdx + 1) % STACK_CAPACITY;
     bool ret = slideBoard(&game->boardsStack[game->currentBoardIdx], &game->boardsStack[nextIdx], dir);
@@ -71,7 +135,6 @@ bool gameSlide(Game_t* game, Direction_t dir) {
         game->currentBoardIdx = nextIdx;
         game->lastBoardIdx = game->currentBoardIdx;
         game->boardsStackSize = MIN(game->boardsStackSize + 1, STACK_CAPACITY);
-        printBoard(&game->boardsStack[game->currentBoardIdx]);
     }
     return ret;
 }

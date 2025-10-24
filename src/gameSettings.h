@@ -3,7 +3,9 @@
 
 
 
-#define  UNDO_LIMIT                         (10)                                          // defines max allowable undo operations
+#define  UNDO_LIMIT                         (10)                 // defines max allowable undo operations
+#define  MAX_HINT_DEPTH                     (8)                  // defines max depth for hint traversal search
+#define  END_GAME_MSG_TIME                  (2)                  // defines how much time (in minutes) to display game over message 
 
 #define  PROBABILITY_LOW                    (0.7)                                         // Defines probability to fill new cells with the lower of available two choices
 #define  LOWEST_MSB(maxMsb, boardSize)      (MAX((1), (maxMsb) - (6) - (boardSize)))      // user-defined function for lowest msb to fill new cells with as a function of current max msb & board size
