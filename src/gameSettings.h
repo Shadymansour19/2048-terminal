@@ -4,7 +4,7 @@
 
 
 #define  UNDO_LIMIT                         (10)                 // defines max allowable undo operations
-#define  MAX_HINT_DEPTH                     (8)                  // defines max depth for hint traversal search
+#define  MAX_HINT_DEPTH                     (6)                  // defines max depth for hint traversal search
 #define  END_GAME_MSG_TIME                  (2)                  // defines how much time (in seconds) to display game over message 
 
 #define  PROBABILITY_LOW                    (0.7)                                         // Defines probability to fill new cells with the lower of available two choices
